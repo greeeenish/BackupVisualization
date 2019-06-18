@@ -8,11 +8,20 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "d3": "^5.9.2",
+    "echarts": "^4.2.1",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
+    "three": "^0.104.0",
+    "three.meshline": "^1.2.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.6.0",
     "@vue/cli-service": "^3.6.0",
+    "exports-loader": "^0.7.0",
+    "imports-loader": "^0.8.0",
+    "postcss-px-to-viewport": "^1.1.0",
     "vue-template-compiler": "^2.5.21"
   }
 }

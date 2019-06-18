@@ -1,0 +1,37 @@
+/* 图表模块样式 */
+.chart_wrap {
+  border: solid 2px #002f48;
+  box-shadow: 0 0 60px 5px #002f48 inset;
+}
+.chart_container {
+  position: absolute;
+  z-index: 2;
+}
+.chart_background {
+  background-image: url("../assets/image/background/chart_background.png");
+  opacity: 0.2;
+  position: relative;
+  top: -50px;
+  left: -50px;
+}
+.chart_title {
+  font-size: 50px;
+  font-family: sans-serif;
+  font-weight: bold;
+  background: linear-gradient(#00eaff, #009ae8); /* 标准的语法 */
+  background: -webkit-linear-gradient(#00eaff, #009ae8); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#00eaff, #009ae8); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#00eaff, #009ae8); /* Firefox 3.6 - 15 */
+  -webkit-background-clip: text;         /* 规定背景的划分区域 */
+  -webkit-text-fill-color: transparent;  /* 防止字体颜色覆盖 */
+}
+
+/* 清除浮动 */
+.clearfix:before, .clearfix:after{
+  display: block;
+  content: '';
+  clear: both;
+}
+.clearfix {
+  *zoom: 1
+}
