@@ -40,7 +40,8 @@
             bottom: '10%',
             textStyle: {
               color: '#3aa0ee',
-
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'bold',
             },
             data: [
               { name: '恢复任务', icon: 'circle' },
@@ -73,8 +74,8 @@
               },
               labelLine: {
                 show: true,
-                length: 4,
-                length2: 4
+                length: 10,
+                length2: 8
               }
             }
           ]

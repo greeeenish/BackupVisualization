@@ -35,7 +35,8 @@
             textStyle: {
               color: '##3aa0ee',
               fontSize: '26px',
-
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'bold',
             },
             icon: 'roundRect',
             itemWidth: 14,
@@ -64,7 +65,9 @@
               },
               axisLabel: {
                 show: true,
-                color: '#3aa0ee'
+                color: '#3aa0ee',
+                fontFamily: 'Microsoft YaHei',
+                fontWeight: 'bold',
               },
               data: ['5月18日','5月19日','5月20日','5月21日','5月22日','5月23日','5月24日','5月25日']
             },

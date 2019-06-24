@@ -23,6 +23,5 @@
     margin-left: 40px;
     margin-bottom: 60px;
     margin-top: 170px;
-    font-family: "Microsoft YaHei UI";
   }
 </style>

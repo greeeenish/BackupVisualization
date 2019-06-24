@@ -1,5 +1,12 @@
 <template>
-    <div id="canvas_container"></div>
+  <div id="canvas_container">
+    <div id="detail" :style="this.detailPosition" v-show="this.select">
+      <p>{{this.detailData.name}}</p>
+      <p>{{this.detailData.type}}</p>
+      <p>{{this.detailData.ip}}</p>
+      <p>{{this.detailData.os}}</p>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -10,10 +17,11 @@
   import {initCube} from "./initCube"
   import {initStorageCube} from "./initStorageCube"
   import {initCenter} from "./initCenter"
-  import {initPlat} from "./initPlat"
+  // import {initPlat} from "./initPlat"
   import {initLine} from "./initLine"
-  import {initPoint} from "./initPoint"
-
+  import {initArrow} from "./initArrow"
+  import {initCircle} from "./initCircle"
+  import Stats from 'three/examples/js/libs/stats.min.js';
   export default {
     name: "CenterScene",
     data() {
@@ -33,76 +41,79 @@
           name: "数据中心",
           type: 'datacenter',
           children: [
-          {
-            name: "存储环境",
-            type: "platform",
-            children: [
             {
-              name: "区域1",
-              type: 'zone',
+              name: "存储环境",
+              type: "platform",
               children: [
                 {
-                  name: "主机A",
-                  type: 'host',
-                  ip: '192.168.11.69',
-                  os: 'Windows',
+                  name: "区域1",
+                  type: 'zone',
+                  children: [
+                    {
+                      name: "主机A",
+                      type: 'host',
+                      ip: '192.168.11.69',
+                      os: 'Windows',
+                    },
+                  ]
                 },
+                // {
+                //   name: "区域2",
+                //   type: 'zone',
+                //   children: [
+                //     {
+                //       name: "主机D",
+                //       type: 'storage',
+                //       ip: '192.168.11.69',
+                //       os: 'Windows',
+                //     },
+                //   ]
+                // },
               ]
             },
             {
-              name: "区域2",
-              type: 'zone',
+              name: "生产环境" ,
+              type: 'platform',
               children: [
                 {
-                  name: "主机D",
-                  type: 'storage',
-                  ip: '192.168.11.69',
-                  os: 'Windows',
+                  name: '',
+                  type: 'zone',
+                  children: [
+                    {
+                      name: "主机C" ,
+                      type: 'host',
+                      ip: '192.168.11.100',
+                      os: 'Linux',
+                    },
+                  ]
                 },
+                // {
+                //   name: '',
+                //   type: 'zone',
+                //   children: [
+                //     {
+                //       name: "主机C" ,
+                //       type: 'storage',
+                //       ip: '192.168.11.100',
+                //       os: 'Linux',
+                //     },
+                //   ]
+                // }
               ]
-            },]
-          },
-          {
-            name: "生产环境" ,
-            type: 'platform',
-            children: [
-              {
-                name: '',
-                type: 'zone',
-                children: [
-                  {
-                    name: "主机C" ,
-                    type: 'host',
-                    ip: '192.168.11.100',
-                    os: 'Linux',
-                  },
-                ]
-              },
-              {
-                name: '',
-                type: 'zone',
-                children: [
-                  {
-                    name: "主机C" ,
-                    type: 'storage',
-                    ip: '192.168.11.100',
-                    os: 'Linux',
-                  },
-                ]
-              }
-            ]
-          }]
+            }]
         },
         nodes: [],
-        cubeObjects: [],
-        lineObjects: [],
+        objects:[],
         links: [],
         spheres: [],
 
-        plat: {
-          z: 0
-        }
-
+        select: false,
+        detailPosition: {
+          left: 0,
+          top: 0
+        },
+        detailData: {},
+        skip: 0
       }
     },
     methods: {
@@ -117,12 +128,12 @@
         //光源
         this.initLight();
         //交互控制
-        this.initControl()
+        this.initControl();
+
         //辅助工具
         let helper = new THREE.AxesHelper(1000);
-        // this.scene.add(helper);
-        let chelper = new THREE.CameraHelper(this.camera)
-        // this.scene.add(chelper)
+        this.scene.add(helper);
+        this.initStats()
       },
       initRender() {
         this.renderer = new THREE.WebGLRenderer({
@@ -139,8 +150,9 @@
       initCamera() {
         this.camera = new THREE.PerspectiveCamera(70, this.width / this.height, 1, 10000);
         this.camera.up.x=0;      this.camera.up.y=0;      this.camera.up.z=-1;
-        this.camera.position.set(-1000, -1200, -500)
-        this.camera.lookAt(0,0,0)
+        // this.camera.position.set(-1000, -1200, -500)
+        this.camera.position.set(1000, -1200, -500)
+        this.camera.lookAt(1000, 1000, -500)
       },
       initScene() {
         this.scene = new THREE.Scene();
@@ -148,14 +160,23 @@
       },
       initLight() {
         //环境光
-        this.light = new THREE.AmbientLight(0xffffff, 6);
-        this.light.position.set(0, 0, -1000);
+        this.light = new THREE.AmbientLight(0xffffff, 8);
+        this.light.position.set(1000, -1200, -500);
         this.scene.add(this.light);
       },
       initControl() {
         this.traceballControl = new OrbitControls( this.camera, this.renderer.domElement );
         window.addEventListener('resize', this.onWindowResize, false);
         this.renderer.domElement.addEventListener( 'wheel', ()=>{}, false );
+      },
+      initStats() {
+        this.stats = new Stats();
+        this.stats.setMode(0); // 0: fps, 1: ms
+        // 放在左上角
+        this.stats.domElement.style.position = 'absolute';
+        this.stats.domElement.style.left = '500px';
+        this.stats.domElement.style.top = '0px';
+        document.body.appendChild(this.stats.domElement);
       },
 
       /**添加3D元素*/
@@ -199,20 +220,20 @@
           else {
             let platform = new THREE.Group();
             // let plat = initPlane(value.data.children.length * 200,value.depth * 200, -50);
-            let plat = initPlat(value.data.children.length * 200,value.depth * 200, value.depth * 100);
+            // let plat = initPlat(value.data.children.length * 200,value.depth * 200, value.depth * 100);
 
-
+            initCircle()
             value.x = (value.x - this.planewidth/2);    //缩放位置
             value.y = (value.y - this.planewidth/2);
 
-            platform.add(plat);
-            this.plat.z = value.depth * 100/2
-            platform.position.set(value.x, value.y, -this.plat.z);
+            // platform.add(plat);
+            platform.position.set(value.x, value.y, -50);
             this.scene.add(platform);
 
             this.loadFont(value.data.name).then((font)=>{
-              font.position.set(value.x, value.y-value.depth * 100, -this.plat.z);
-              this.scene.add(font)
+              font.position.y -= 200;
+
+              platform.add(font)
             });
 
             this.addPlatformObj(value.data,platform)
@@ -268,15 +289,15 @@
               }
 
               if(zone){
-                cube.position.z = this.plat.z;
+                cube.position.z = 25;
                 zone.add(cube)
               }
               else {
-                cube.position.z = this.plat.z;
+                cube.position.z = 0;
                 platform.add(cube)
               }
-              // that.cubeObjects.push(cube.children[0]);
-              // that.lineObjects.push(cube.children[1])
+
+              this.objects.push(cube)
             })
           }
           else if(cnode.type == 'storage'){  //存储
@@ -315,14 +336,14 @@
       },
       addLinks() {
         this.links.forEach((value,index) => {
-            let line = initLine(value);
-            this.scene.add(line);
+          let line = initLine(value);
+          this.scene.add(line);
         });
       },
       addSpheres() {
         this.spheres.forEach((value, index) => {
           if(value.parent!=null){
-            let sphere = initPoint(value);
+            let sphere = initArrow(value);
             value.body = sphere;
             value.body.position.set(value.x, value.y, 0);
             this.scene.add(sphere);
@@ -332,6 +353,7 @@
 
       /**动画*/
       animate(){
+        this.stats.update();
         this.pointMove();
         requestAnimationFrame(this.animate);
         this.renderer.render(this.scene, this.camera);
@@ -374,7 +396,6 @@
       addClickEvent() {
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
-        var select = null;
 
         //监听全局点击事件,通过ray检测选中哪一个object
         document.addEventListener("mousedown", (event) => {
@@ -383,26 +404,25 @@
           this.mouse.y = - (event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
 
           this.raycaster.setFromCamera(this.mouse, this.camera);
-          var intersects = this.raycaster.intersectObjects(this.cubeObjects) || this.raycaster.intersectObjects(this.lineObjects);
 
+          const intersects = this.raycaster.intersectObjects(this.objects, true);
           if (intersects.length > 0) {
-            if(select){
-              //还原
-              select.parent.children[1].material.color.setHex(0x383941)
-            }
-            select = intersects[0].object;
-            // 改变颜色
-            select.parent.children[1].material.color.setHex(0xffffff);
-            //显示详情
-            this.showDetail(select)
+            this.detailPosition.left = event.clientX + 'px';
+            this.detailPosition.top = event.clientY + 'px';
+            this.select = true;
+            this.showDetail(intersects[0].object.parent)
+          }else {
+            this.select = false
           }
 
         }, false)
       },
       showDetail(select){
         if(select.data.data && select.data.data.type=='datacenter'){
+          this.detailData = select.data.data
           console.log(select.data.data.name)
         }else {
+          this.detailData = select.data
           console.log(select.data.name)
         }
 
@@ -410,7 +430,7 @@
       loadFont(text){
         return new Promise((resolve, reject)=>{
           let loader = new THREE.FontLoader();
-          loader.load(process.env.BASE_URL+"font/Microsoft YaHei_Regular.json", (res)=>{
+          loader.load(process.env.BASE_URL+"font/FZLanTingHeiS-B-GB_Regular.json", (res)=>{
             let font = new THREE.TextBufferGeometry(text, {
               font: res,
               size: 30,
@@ -440,4 +460,11 @@
     border: none;
     cursor: pointer;
   }
+  #detail {
+    width: 800px;
+    height: 800px;
+    position: absolute;
+    background-color: rebeccapurple;
+  }
+
 </style>

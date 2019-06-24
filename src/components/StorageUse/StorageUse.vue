@@ -45,7 +45,8 @@
             textStyle: {
               fontWeight: 'normal',
               color: '#00e7df',
-              fontSize: '120%'
+              fontSize: '120%',
+              fontFamily: 'Microsoft YaHei',
             }
           },
           color: ["#3aa0ee", "#00e7df"],
@@ -53,9 +54,8 @@
             right: 0,
             textStyle: {
               color: '#3aa0ee',
-              fontSize: '70%',
-              // fontWeight: 'bold'
-
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'bold',
             },
             icon: 'roundRect',
             itemWidth: 14,

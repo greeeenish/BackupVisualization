@@ -61,19 +61,6 @@ export const initPlat = (width, height, thick) => {
       mats.push(null);
     }
     else if(i==3){
-      //获取到canvas对象
-      var canvas = document.createElement('canvas');
-      canvas.width=100;
-      canvas.height=100;
-      var ctx = canvas.getContext('2d');
-      ctx.fillText("aaaaaa",0,0)
-      ctx.fillStyle = "red";
-      ctx.font = "60px '微软雅黑'";
-
-
-      // var texture = new THREE.Texture(canvas);
-      // texture.needsUpdate=true;//开启纹理更新
-
       let loader = new THREE.TextureLoader();
       let texture = loader.load(process.env.BASE_URL + "object/plat/p-3.png");
       let material = new THREE.MeshBasicMaterial({

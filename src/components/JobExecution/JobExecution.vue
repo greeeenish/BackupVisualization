@@ -26,14 +26,6 @@
         const myChart = echarts.init(document.getElementById('job_execution'))
 
         const option = {
-          // title: {
-          //   text: '展示：近五天统计',
-          //   textStyle: {
-          //     color: '#0098e7',
-          //     fontSize: '26px',
-          //   },
-          //   x: '64%',
-          // },
           grid: {
             left: '2%',
             right: '3%',
@@ -46,7 +38,9 @@
             right: 0,
             top:'10%',
             textStyle: {
-              color: "#0098e7"
+              color: "#0098e7",
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'bold',
             },
             itemWidth: 12,
           },
@@ -63,7 +57,9 @@
             },
             axisLabel: {
               interval: 0,
-              color: '#0098e7'
+              color: '#0098e7',
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'bold',
             },
           },
           yAxis: {

@@ -17,7 +17,7 @@ export const initLine = function (value) {
   meshline.setGeometry( geometry );
 
   let material = new MeshLineMaterial({
-    color: new THREE.Color( 0x4CCDFC ),
+    color: new THREE.Color( 0x024A2A ),
     opacity: 1,
     // resolution: resolution,
     sizeAttenuation: !false,

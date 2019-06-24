@@ -96,10 +96,11 @@
     span {
       font-size: 26px;
       color: #3aa0ee ;
-      float: right;
+      /*float: right;*/
       vertical-align: bottom;
       font-weight: normal;
       margin-top: 24px;
+      margin-left: 320px;
     }
   }
 </style>

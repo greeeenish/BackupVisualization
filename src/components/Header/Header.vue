@@ -64,12 +64,11 @@
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
-    top: 10px;
+    top: 25px;
 
   .font {
     font-size: 108px;
-    font-family: sans-serif;
-    font-weight: bold;
+    /*font-weight: bold;*/
     color:#00A1F5;
     letter-spacing: 0;
     text-shadow:

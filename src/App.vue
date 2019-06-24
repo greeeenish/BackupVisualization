@@ -28,9 +28,14 @@ export default {
 </script>
 
 <style lang="less">
+  @font-face
+  {
+    font-family: FZLTCHJW;
+    src: url("assets/font/FZLTCHJW.TTF");
+  }
   html {
-    font-family: "微软雅黑 Light";
-    background-image: url("assets/image/background/background.png");
+    font-family: FZLTCHJW;
+    /*background-image: url("assets/image/background/background.png");*/
     /*width: 100%;*/
     /*height: 100%;*/
   }

@@ -17,6 +17,8 @@ export const initPlane = (width, height, thick) => {
       else if( i==5){//顶面
         let loader = new THREE.TextureLoader();
         let texture = loader.load(process.env.BASE_URL + "object/5/5/p-5.png");
+        texture.minFilter = THREE.LinearFilter;
+        texture.minFilter = THREE.LinearFilter;
         let material = new THREE.MeshBasicMaterial({
           map: texture,
           transparent: true,
@@ -26,6 +28,7 @@ export const initPlane = (width, height, thick) => {
       else if(i==0){
         let loader = new THREE.TextureLoader();
         let texture = loader.load(process.env.BASE_URL + "object/5/5/p-0.png");
+        texture.minFilter = THREE.LinearFilter;
         let material = new THREE.MeshBasicMaterial({
           map: texture,
           side: THREE.DoubleSide,
@@ -37,6 +40,7 @@ export const initPlane = (width, height, thick) => {
       else if(i==1){
         let loader = new THREE.TextureLoader();
         let texture = loader.load(process.env.BASE_URL + "object/5/5/p-1.png");
+        texture.minFilter = THREE.LinearFilter;
         let material = new THREE.MeshBasicMaterial({
           map: texture,
           side: THREE.DoubleSide,
@@ -48,6 +52,7 @@ export const initPlane = (width, height, thick) => {
       else if(i==2){
         let loader = new THREE.TextureLoader();
         let texture = loader.load(process.env.BASE_URL + "object/5/5/p-2.png");
+        texture.minFilter = THREE.LinearFilter;
         let material = new THREE.MeshBasicMaterial({
           map: texture,
           side: THREE.DoubleSide,
@@ -59,6 +64,7 @@ export const initPlane = (width, height, thick) => {
       else if(i==3){
         let loader = new THREE.TextureLoader();
         let texture = loader.load(process.env.BASE_URL + "object/5/5/p-3.png");
+        texture.minFilter = THREE.LinearFilter;
         let material = new THREE.MeshBasicMaterial({
           map: texture,
           side: THREE.DoubleSide,
