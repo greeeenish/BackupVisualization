@@ -3,8 +3,7 @@ import OBJLoader from "three/examples/js/loaders/OBJLoader"
 import MTLLoader from "three/examples/js/loaders/MTLLoader"
 
 
-export const initCenter = () => {
-
+export const initCenter = (value) => {
   return new Promise(function (resolve, reject) {
     let mtlLoader = new MTLLoader();
     mtlLoader.setPath(process.env.BASE_URL + "object/3/");
@@ -16,8 +15,8 @@ export const initCenter = () => {
       objLoader.load('3.obj', (object1) => {
         object1.rotation.x = 1.5 * Math.PI;
         object1.rotation.y = 0.5 * Math.PI;
-        // object1.scale.set(0.5, 0.5, 0.5);
-        object1.position.z -= 30
+        object1.position.z -= 2;
+        object1.data = value;
         resolve(object1)
       })
     })

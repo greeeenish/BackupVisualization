@@ -26,7 +26,7 @@
           "value": 62
         }],
         detail_data:{
-          all: 2048,
+          all: 1024,
           use: 778.24,
           rest: 1269.76
         }

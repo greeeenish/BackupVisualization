@@ -22,6 +22,7 @@ export const initPlane = (width, height, thick) => {
         let material = new THREE.MeshBasicMaterial({
           map: texture,
           transparent: true,
+          opacity: 1
         });
         mats.push(material);
       }

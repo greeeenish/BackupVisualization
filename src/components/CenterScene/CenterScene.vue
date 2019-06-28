@@ -1,10 +1,14 @@
 <template>
   <div id="canvas_container">
     <div id="detail" :style="this.detailPosition" v-show="this.select">
-      <p>{{this.detailData.name}}</p>
-      <p>{{this.detailData.type}}</p>
-      <p>{{this.detailData.ip}}</p>
-      <p>{{this.detailData.os}}</p>
+      <div class="detail_title">生产环境详情</div>
+      <div class="detail_content">
+        <p>IP地址：{{this.detailData.ip}}</p>
+        <p>操作系统：{{this.detailData.os}}</p>
+        <p>灾备任务：{{this.detailData.os}}</p>
+        <p>连接状态：{{this.detailData.os}}</p>
+        <p>备份数据查看：{{this.detailData.os}}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -131,8 +135,10 @@
         this.initControl();
 
         //辅助工具
-        let helper = new THREE.AxesHelper(1000);
-        this.scene.add(helper);
+        // let helper = new THREE.AxesHelper(1000);
+        // this.scene.add(helper);
+        // let camerahelper = new THREE.CameraHelper(this.camera);
+        // this.scene.add(camerahelper);
         this.initStats()
       },
       initRender() {
@@ -144,24 +150,24 @@
         this.width = document.body.clientWidth;
         this.height = document.body.clientHeight;
         this.renderer.setSize(this.width, this.height);
-        this.renderer.domElement.style.cssText += "position:absolute; top:0; left:0 "
+        this.renderer.domElement.style.cssText += "position:absolute; top:0; left:0 ";
         document.getElementById('canvas_container').appendChild(this.renderer.domElement);//追加 【canvas】 元素
       },
       initCamera() {
         this.camera = new THREE.PerspectiveCamera(70, this.width / this.height, 1, 10000);
         this.camera.up.x=0;      this.camera.up.y=0;      this.camera.up.z=-1;
         // this.camera.position.set(-1000, -1200, -500)
-        this.camera.position.set(1000, -1200, -500)
+        this.camera.position.set(1200, -1000, -800);
         this.camera.lookAt(1000, 1000, -500)
       },
       initScene() {
         this.scene = new THREE.Scene();
-        this.scene.position.z = -100
+        this.scene.position.z = -200
       },
       initLight() {
         //环境光
         this.light = new THREE.AmbientLight(0xffffff, 8);
-        this.light.position.set(1000, -1200, -500);
+        this.light.position.set(1200, -1000, -800);
         this.scene.add(this.light);
       },
       initControl() {
@@ -194,7 +200,7 @@
             return d.children;
           }
         });
-        this.planewidth = root.height * 900
+        this.planewidth = root.height * 1000;
         let treemap = d3.tree().size([this.planewidth, this.planewidth]);   //平面的宽高
         // 设置节点的x、y位置信息
         let treemapData = treemap(root);
@@ -203,19 +209,26 @@
         this.spheres = treemapData.descendants();
       },
       addPlane() {  //底部的台子
-        let plane = initPlane(1200, 1200, 500);
+        let plane = initPlane(1500, 1500, 500);
         plane.position.z = 250;
         this.scene.add(plane)
       },
       addNodes() {
         this.nodes.forEach((value, index) => {
-          if(value.data.type == "datacenter"){  //数据中心圆柱
+          if(value.data.type == "datacenter"){  //数据中心
             value.x = (value.x - this.planewidth/2);    //缩放位置
             value.y = (value.y - this.planewidth/2);
-            initCenter().then((object)=>{
-              object.position.set(value.x-25, value.y, 0)
-              this.scene.add(object)
-            })
+            let center = new THREE.Group();
+            center.position.set(value.x, value.y, 0);
+            initCenter(value.data).then((object)=>{
+              center.add(object);
+              this.objects.push(object)
+            });
+            this.loadFont(value.data.name).then((font)=>{
+              font.rotation.y -= 1.5 * Math.PI;
+              center.add(font)
+            });
+            this.scene.add(center)
           }
           else {
             let platform = new THREE.Group();
@@ -227,12 +240,11 @@
             value.y = (value.y - this.planewidth/2);
 
             // platform.add(plat);
-            platform.position.set(value.x, value.y, -50);
+            platform.position.set(value.x, value.y, 0);
             this.scene.add(platform);
 
             this.loadFont(value.data.name).then((font)=>{
-              font.position.y -= 200;
-
+              font.rotation.y -= 1.5 * Math.PI;
               platform.add(font)
             });
 
@@ -242,7 +254,7 @@
         this.addClickEvent()
       },
       addPlatformObj(value,platform, zone) {
-        let that = this
+        let that = this;
         var childnodes = value.children;
         for(let i=0; i < childnodes.length; i++){
           var cnode = childnodes[i];
@@ -252,7 +264,6 @@
             let plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
             zone = new THREE.Group();
-            zone.position.z = -9
             if(childnodes.length%2==0){
               if(i<(childnodes.length/2)){
                 zone.position.x -= (i+1)*100
@@ -289,11 +300,11 @@
               }
 
               if(zone){
-                cube.position.z = 25;
+                // cube.position.z = 25;
                 zone.add(cube)
               }
               else {
-                cube.position.z = 0;
+                // cube.position.z = 0;
                 platform.add(cube)
               }
 
@@ -363,20 +374,20 @@
         this.spheres.forEach((value) => {
           if(value.parent){
             if(value.body.position.y > (value.y + value.parent.y)/2){
-              value.body.position.y -= 2 //向下
+              value.body.position.y -= 2; //向下
               value.body.rotation.z = 0
             }
             else if(value.body.position.x > value.parent.x ){
-              value.body.position.x -=2//向右
+              value.body.position.x -=2; //向右
               value.body.rotation.z = -0.5 * Math.PI
             }
             else if(value.body.position.x < value.parent.x){
-              value.body.position.x +=2 //向左
+              value.body.position.x +=2; //向左
               value.body.rotation.z = 0.5 * Math.PI
             }
 
             if(value.body.position.y < (value.y + value.parent.y)/2+2 && value.body.position.y+2 > value.parent.y && Math.abs(value.body.position.x - value.parent.x)<2){
-              value.body.position.y -= 2//向下
+              value.body.position.y -= 2; //向下
               value.body.rotation.z = 0
             }else if(value.body.position.y<value.parent.y){
               value.body.position.x = value.x;
@@ -418,14 +429,8 @@
         }, false)
       },
       showDetail(select){
-        if(select.data.data && select.data.data.type=='datacenter'){
-          this.detailData = select.data.data
-          console.log(select.data.data.name)
-        }else {
-          this.detailData = select.data
-          console.log(select.data.name)
-        }
-
+        this.detailData = select.data;
+        console.log(select.data.name)
       },
       loadFont(text){
         return new Promise((resolve, reject)=>{
@@ -440,8 +445,8 @@
               color: 0x00e598
             });
             let fontModel = new THREE.Mesh(font,material);
-            fontModel.rotateX(1.5 * Math.PI)
-            fontModel.rotateY(1 * Math.PI)
+            fontModel.rotateX(1.5 * Math.PI);
+            fontModel.rotateY(1 * Math.PI);
             resolve(fontModel)
           })
         })
@@ -455,16 +460,30 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
   #canvas_container {
     border: none;
     cursor: pointer;
   }
   #detail {
-    width: 800px;
-    height: 800px;
     position: absolute;
-    background-color: rebeccapurple;
+    background-image: url("../../assets/image/background/detail_background.png");
+    background-size: cover;
+    background-repeat: round;
+
+    .detail_title {
+      color: #00eaff;
+      border-bottom: 1px solid #00eaff;
+      padding: 20px;
+    }
+    .detail_content {
+      color: #00eaff;
+      padding: 20px;
+      p {
+        margin-top: 0;
+        margin-bottom: 10px;
+      }
+    }
   }
 
 </style>
